@@ -229,7 +229,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -458,6 +458,13 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  if vim.lsp.inlay_hint then
+    vim.keymap.set('n', '<leader>uh', function()
+      vim.lsp.inlay_hint(0, nil)
+    end, { desc = 'Toggle Inlay Hints' })
+  end
+
+
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
@@ -512,7 +519,21 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {
+    cmd = {"gopls"},
+    gopls = {
+      usePlaceholders = true,
+      hints = {
+        -- assignVariableTypes = true,
+        -- compositeLiteralFields = true,
+        -- compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    }
+  },
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
@@ -522,6 +543,7 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+      hint = {enable = true},
     },
   },
 }
@@ -536,6 +558,16 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
+-- require('lspconfig').gopls.setup{
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   cmd = {"gopls"},
+--   settings = {
+--     gopls = {
+--       usePlaceholders = true,
+--     },
+--   }
+-- }
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
