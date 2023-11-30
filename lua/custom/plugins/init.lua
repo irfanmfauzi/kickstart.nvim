@@ -6,4 +6,6 @@ return {
 	'buoto/gotests-vim',
 	'f-person/git-blame.nvim',
 	'mg979/vim-visual-multi',
+	'christoomey/vim-tmux-navigator',
+	'folke/trouble.nvim',
 }
