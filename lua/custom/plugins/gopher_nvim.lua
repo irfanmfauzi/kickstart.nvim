@@ -1,10 +1,11 @@
 return {
 	"olexsmir/gopher.nvim",
+	ft = "go",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-treesitter/nvim-treesitter",
 	},
-	config = function ()
+	config = function()
 		require("gopher").setup {
 			commands = {
 				go = "go",
@@ -14,10 +15,10 @@ return {
 				iferr = "iferr",
 			},
 		}
-		vim.keymap.set("n", "<leader>gsj","<cmd> GoTagAdd json <CR>", { desc = "Add json tag to Go Struct" } )
+		vim.keymap.set("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json tag to Go Struct" })
 		vim.keymap.set("n", "<leader>ie", "<cmd> GoIfErr <CR>", { desc = "Add if err boiler plate" })
 	end,
-	build = function ()
+	build = function()
 		vim.cmd [[silent! GoInstallDeps]]
 	end
 }

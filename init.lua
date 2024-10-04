@@ -43,7 +43,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+vim.g.netrw_banner = 0
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -59,6 +59,7 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 vim.opt.rtp:prepend(lazypath)
+vim.filetype.add({ extension = { templ = "templ" } })
 
 -- [[ Configure plugins ]]
 -- NOTE: Here is where you install your plugins.
@@ -153,14 +154,14 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    "folke/tokyonight.nvim",
+    lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd [[colorscheme tokyonight]]
     end,
+    opts = {},
   },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -168,7 +169,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -383,7 +384,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'terraform' },
+    ensure_installed = { 'html', 'php', 'c', 'php', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'terraform', 'markdown' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -516,12 +517,31 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+--
+
+local function load_project_specific_settings()
+  local project_root = vim.fn.getcwd()
+  local phpExecutable = ""
+
+  -- Define project-specific paths
+  if project_root:match("micro-mms") then
+    phpExecutable = "docker exec -i micro_mms_php php"
+  elseif project_root:match("micro-mocash") then
+    phpExecutable = "docker exec -i micro_mocash_php php"
+  end
+  return phpExecutable
+end
+
 local servers = {
   -- clangd = {},
   gopls = {
     cmd = { "gopls" },
     gopls = {
       usePlaceholders = true,
+      analyses = {
+        unusedparams = true,
+        unusedvariable = true,
+      },
       hints = {
         -- assignVariableTypes = true,
         -- compositeLiteralFields = true,
@@ -533,11 +553,25 @@ local servers = {
       },
     }
   },
-  -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-  html = { filetypes = { 'html', 'twig', 'hbs', 'tmpl' } },
-
+  tsserver = {},
+  html = {
+    filetypes = { 'html', 'twig', 'hbs', 'tmpl', 'blade' },
+    init_options = {
+      configurationSection = { "html", "css", "javascript" },
+      embeddedLanguages = {
+        css = true,
+        javascript = true
+      },
+      provideFormatter = true
+    }
+  },
+  intelephense = {
+    filetypes = { "blade", "php" },
+    environment = {
+      phpExecuteable = load_project_specific_settings()
+    },
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -545,6 +579,22 @@ local servers = {
       hint = { enable = true },
     },
   },
+  pylsp = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          enabled = false,
+          ignore = { 'W391' },
+          maxLineLength = 100
+        },
+        pylint = { enabled = false },
+        pyls_isort = { enabled = false },
+        pylsp_mypy = { enabled = true },
+        pylsp_black = { enabled = true },
+        pyls_flake8 = { enabled = true }
+      }
+    }
+  }
 }
 
 -- Setup neovim lua configuration
@@ -634,4 +684,4 @@ cmp.setup {
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2

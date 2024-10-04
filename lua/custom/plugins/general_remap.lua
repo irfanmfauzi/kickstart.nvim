@@ -1,6 +1,13 @@
+local relativenumber = true
+vim.opt.relativenumber = relativenumber
 vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.keymap.set('n', '<leader>trn', function()
+	vim.opt.relativenumber = not relativenumber
+	relativenumber = not relativenumber
+end, { desc = 'togle relative number' })
 vim.opt.swapfile = false
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = 'Move line down' })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = 'Move line up' })

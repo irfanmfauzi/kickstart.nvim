@@ -7,4 +7,5 @@ return {
 	'f-person/git-blame.nvim',
 	'mg979/vim-visual-multi',
 	'christoomey/vim-tmux-navigator',
+	'AndrewRadev/inline_edit.vim',
 }
