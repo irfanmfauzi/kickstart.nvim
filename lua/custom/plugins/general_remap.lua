@@ -24,10 +24,5 @@ vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
 vim.keymap.set("x", "<leader>p", [["_dP]], { desc = 'Paste without replacing clipboard' })
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = 'Open Git Status' })
 
-if vim.lsp.inlay_hint then
-	vim.keymap.set('n', '<leader>uh', function()
-		vim.lsp.inlay_hint(0, nil)
-	end, { desc = 'Toggle Inlay Hints' })
-end
 
 return {}

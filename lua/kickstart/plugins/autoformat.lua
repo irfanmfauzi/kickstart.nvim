@@ -39,6 +39,17 @@ return {
         local client = vim.lsp.get_client_by_id(client_id)
         local bufnr = args.buf
 
+        if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+          -- Toggle inlay hints
+          vim.keymap.set("n", '<leader>th', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+          end, { desc = '[T]oggle Inlay [H]ints' })
+
+          -- Enable inlay hints by default
+          -- vim.lsp.inlay_hint.enable()
+        end
+
+
         -- Only attach to clients that support document formatting
         if not client.server_capabilities.documentFormattingProvider then
           return
