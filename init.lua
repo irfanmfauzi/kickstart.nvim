@@ -312,7 +312,6 @@ vim.keymap.set("x", "<leader>p", [["_dP]], { desc = 'Paste without replacing cli
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = 'Open Git Status' })
 
 
-return {}
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
