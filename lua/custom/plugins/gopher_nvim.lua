@@ -19,6 +19,6 @@ return {
 		vim.keymap.set("n", "<leader>ie", "<cmd> GoIfErr <CR>", { desc = "Add if err boiler plate" })
 	end,
 	build = function()
-		vim.cmd [[silent! GoInstallDeps]]
+		vim.cmd.GoInstallDeps()
 	end
 }

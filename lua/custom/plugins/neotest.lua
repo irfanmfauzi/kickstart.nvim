@@ -12,9 +12,9 @@ return {
 	config = function()
 		-- get neotest namespace (api call creates or returns namespace)
 		vim.api.nvim_set_keymap("n", "<leader>tq", ":lua require('neotest').output_panel.toggle()<CR>",
-			{ noremap = true, silent = true })
+			{ noremap = true, silent = true, desc = "Toggle Neotest Output Panel" })
 		vim.api.nvim_set_keymap("n", "<leader>tr", ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>",
-			{ noremap = true, silent = true })
+			{ noremap = true, silent = true, desc = "Run Neotest on Current File" })
 		local neotest_ns = vim.api.nvim_create_namespace("neotest")
 		vim.diagnostic.config({
 			virtual_text = {
