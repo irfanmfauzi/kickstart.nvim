@@ -15,6 +15,8 @@ return {
 			{ noremap = true, silent = true, desc = "Toggle Neotest Output Panel" })
 		vim.api.nvim_set_keymap("n", "<leader>tr", ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>",
 			{ noremap = true, silent = true, desc = "Run Neotest on Current File" })
+		vim.api.nvim_set_keymap("n", "<leader>tqc", ":lua require('neotest').output_panel.clear()<CR>",
+			{ noremap = true, silent = true, desc = "Toggle Neotest Clear Output Panel" })
 		local neotest_ns = vim.api.nvim_create_namespace("neotest")
 		vim.diagnostic.config({
 			virtual_text = {
